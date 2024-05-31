@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="src/explore.css" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Fira Sans' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- Font Awesome -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler bg-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="explore.html">Explore</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="aboutUs.html">About</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container-card">
+        <div class="card-container">
+            <div class="card card-1" id="card-1">
+                <img src="" class="card-img-top" alt="Card 1" id="img-1">
+            </div>
+            <div class="card card-2" id="card-2">
+                <img src="" class="card-img-top2" alt="Card 2" id="img-21">
+                <img src="" class="card-img-top2" alt="Card 2" id="img-22">
+                <img src="" class="card-img-top2" alt="Card 2" id="img-23">
+                <div class="card-body text-center">
+                    <h5 id="card-title">Gunung Merbabu</h5>
+                </div>
+            </div>
+            <div class="card card-3" id="card-3">
+                <img src="" class="card-img-top" alt="Card 3" id="img-3">
+            </div>
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <button class="btn btn-primary change-btn" id="prev-button">
+                        <i class="fa fa-angle-double-left" aria-hidden="true"></i>
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-primary change-btn" id="next-button">
+                        <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <div class="info-box">
+            <h1 id="container-title">Nama Wisata</h1>
+            <h5 id="container-provinsi">Semarang, Jawa Tengah</h5>
+            <p id="container-deskripsi">Deskripsi</p>
+            <p id="container-price">htm</p>
+        </div>
+        <div class="api-container1">
+        <div id="map"></div>
+        <div id="route-info" style="display: none;"></div>
+        <div id="route-link" style="display: none;">
+            <a id="google-maps-link" href="#" target="_blank">Open in Google Maps</a>
+        </div>
+        <div id="error-message" style="display: none;"></div>
+    </div>
+    <div class="api-container2">
+        <div class="weather-widget" id="weather-widget">
+            <h2 class="location" id="location">Weather</h2>
+            <div class="current-weather" id="current-weather"></div>
+            <h3>Daily Forecast</h3>
+            <div class="forecast" id="forecast"></div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="src/explore.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQW4MP_SjzZzmsP_ELOJIGYAlLgUzQtCA&callback=initMap" onerror="handleApiError()"></script>
+</body>
+</html>

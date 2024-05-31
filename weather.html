@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Widget</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .weather-widget {
+            background-color: #3f87d4;
+            color: white;
+            padding: 40px; /* Increased padding */
+            border-radius: 10px;
+            text-align: center;
+            width: 600px; /* Elongated width */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex; /* Display horizontally */
+            flex-direction: column; /* Align children vertically */
+            justify-content: space-between; /* Evenly space children */
+        }
+        .location {
+            font-size: 28px; /* Larger font size for location */
+            font-weight: bold;
+            margin-bottom: 20px; /* Increased margin */
+        }
+        .forecast {
+            display: flex; /* Display forecast items horizontally */
+            justify-content: space-between; /* Evenly space forecast items */
+        }
+        .forecast-item {
+            flex: 1; /* Distribute space equally */
+            text-align: center;
+            margin-top: 20px; /* Increased margin */
+        }
+        .forecast-item img {
+            width: 70px; /* Increased icon size */
+        }
+        .current-weather {
+            font-size: 24px; /* Larger font size for current weather */
+            font-weight: bold;
+        }
+        .current-weather img {
+            width: 100px; /* Increased icon size */
+        }
+    </style>
+</head>
+<body>
+    <div class="weather-widget" id="weather-widget">
+        <h2 class="location" id="location">Weather</h2>
+        <div class="current-weather" id="current-weather"></div>
+        <h3>Daily Forecast</h3>
+        <div class="forecast" id="forecast"></div>
+        <div>
+            <button id="prev-btn">Previous Location</button>
+            <button id="next-btn">Next Location</button>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = '6f68b86aeadebcec03921accca4a70f6';
+        const locations = [
+        { name: 'Mount Bromo', lat: -7.9424934, lon: 112.9529953 },
+        { name: 'Rawa Pening', lat: -7.305630, lon: 110.445630 },
+        { name: 'Gunung Merbabu', lat: -7.4524377, lon: 110.4408198 },
+        { name: 'Gunung Merapi', lat: -7.540718, lon: 110.445724 },
+        { name: 'Brown Canyon', lat: -7.0565, lon: 110.4863 },
+        { name: 'Pantai Menganti', lat: -7.7702, lon: 109.4130 },
+        { name: 'Dataran Tinggi Dieng', lat: -7.2149, lon: 109.8994 },
+        { name: 'Gunung Slamet', lat: -7.2262, lon: 109.2648 },
+        { name: 'Pantai Tanjung', lat: -5.8398, lon: 110.4111 },
+        { name: 'Pantai Suwuk', lat: -7.7607, lon: 109.4852 },
+        { name: 'Lawang Sewu', lat: -6.9841, lon: 110.4108 },
+        { name: 'Klenteng Sam Po Kong', lat: -6.9963, lon: 110.398 },
+        { name: 'Candi Borobudur', lat: -7.607355, lon: 110.203804 },
+        { name: 'Museum Kereta Api Ambarawa', lat: -7.2646, lon: 110.4047 },
+        { name: 'Keraton Surakarta', lat: -7.5778, lon: 110.8279 },
+        { name: 'Masjid Agung Jawa Tengah', lat: -6.9835, lon: 110.4451 },
+        { name: 'Museum Batik Danar', lat: -7.568762302398682, lon: 110.81633758544922 },
+        { name: 'Candi Sukuh', lat: -7.6277, lon: 111.1314 },
+        { name: 'Candi Gedong', lat: -7.2102, lon: 110.3420 },
+        { name: 'Kota Lama Semarang', lat: -6.9676476, lon: 110.4289448 }
+];
+        let currentIndex = 2; // Index of the current location in the array
+
+        function fetchWeatherData(lat, lon) {
+            const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,hourly&appid=${apiKey}`;
+
+            return fetch(url)
+                .then(response => response.json())
+                .then(data => data)
+                .catch(error => console.error('Error fetching the weather data:', error));
+        }
+
+        function displayWeather(location) {
+            fetchWeatherData(location.lat, location.lon)
+                .then(data => {
+                    const currentWeather = data.daily[0]; // Current weather data
+                    const dailyForecast = data.daily.slice(1, 4); // Only get the next 3 days excluding the current one
+                    const locationName = document.getElementById('location');
+                    const currentWeatherDiv = document.getElementById('current-weather');
+                    const forecastDiv = document.getElementById('forecast');
+
+                    // Display location name
+                    locationName.textContent = location.name;
+
+                    // Display current weather data
+                    const currentWeatherDate = new Date(currentWeather.dt * 1000);
+                    const currentWeatherDay = currentWeatherDate.toLocaleDateString('en', { weekday: 'long' });
+                    const currentWeatherIconUrl = `https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}.png`;
+                    const currentTemperatureCelsius = (currentWeather.temp.day - 273.15).toFixed(2);
+                    currentWeatherDiv.innerHTML = `
+                        <div class="current-weather-item">
+                            <p class="weather-info">${currentWeatherDay}</p>
+                            <img src="${currentWeatherIconUrl}" alt="Weather Icon">
+                            <p class="weather-info">${currentTemperatureCelsius} °C</p>
+                            <p class="weather-info">${currentWeather.weather[0].description}</p>
+                        </div>
+                    `;
+
+                    // Display daily forecast
+                    forecastDiv.innerHTML = ''; // Clear previous forecast
+                    dailyForecast.forEach(day => {
+                        const date = new Date(day.dt * 1000);
+                        const dayOfWeek = date.toLocaleDateString('en', { weekday: 'long' });
+                        const iconUrl = `https://openweathermap.org/img/wn/${day.weather[0].icon}.png`;
+
+                        // Convert temperature from Kelvin to Celsius
+                        const temperatureCelsius = (day.temp.day - 273.15).toFixed(2);
+
+                        // Create forecast HTML
+                        const forecastHTML = `
+                            <div class="forecast-item">
+                                <p class="weather-info">${dayOfWeek}</p>
+                                <img src="${iconUrl}" alt="Weather Icon">
+                                <p class="weather-info">${temperatureCelsius} °C</p>
+                                <p class="weather-info">${day.weather[0].description}</p>
+                            </div>
+                        `;
+
+                        // Append forecast HTML to forecastDiv
+                        forecastDiv.insertAdjacentHTML('beforeend', forecastHTML);
+                    });
+                });
+        }
+
+        // Display weather for the first location (Mount Sumeru) on page load
+        displayWeather(locations[currentIndex]);
+
+        // Event listeners for switching locations
+        document.getElementById('prev-btn').addEventListener('click', function() {
+            currentIndex = (currentIndex - 1 + locations.length) % locations.length;
+            displayWeather(locations[currentIndex]);
+        });
+
+        document.getElementById('next-btn').addEventListener('click', function() {
+            currentIndex = (currentIndex + 1) % locations.length;
+            displayWeather(locations[currentIndex]);
+        });
+    </script>
+</body>
+</html>
